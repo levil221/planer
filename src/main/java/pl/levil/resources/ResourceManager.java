@@ -125,7 +125,7 @@ public class ResourceManager {
         return true;
     }
 
-    public boolean addReservation(int reservationID){
+    public boolean removeReservation(int reservationID){
 
         EntityManager entityManager = getEntityManagerFactory().createEntityManager();
         entityManager.getTransaction().begin();

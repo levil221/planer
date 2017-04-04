@@ -12501,3 +12501,11 @@ div.v-layout.v-horizontal.v-widget {
 	width: 19px;
 	overflow: hidden;
 }
+
+.mytheme .label-month-name {
+	font-family: calibri;
+	font-size: 32px;
+	text-indent: 50px;
+	color: #c5c5c5;
+	text-align: center;
+}

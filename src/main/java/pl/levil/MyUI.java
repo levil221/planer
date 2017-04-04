@@ -24,10 +24,10 @@ public class MyUI extends UI {
     CalendarComponent calendar;
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        StaticResources.populateDB();
+        //StaticResources.populateDB();
 
         calendar = new CalendarComponent();
-
+       // calendar.setWidth("1200px");
         Button nextMonth = new Button(">");
         nextMonth.addClickListener(e -> calendar.changeMonth("next"));
         Button prevMonth = new Button("<");

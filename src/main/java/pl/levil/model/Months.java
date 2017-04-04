@@ -5,18 +5,18 @@ package pl.levil.model;
  */
 
 public enum Months {
-    styczeń(31,1),
-    luty(28,2),
-    marzec(31,3),
-    kwiecień(30,4),
-    maj(31,5),
-    czerwiec(30,6),
-    lipiec(31,7),
-    sierpień(31,8),
-    wrzesien(30,9),
-    październik(31,10),
-    listopad(30,11),
-    grudzień(31,12);
+    Styczeń(31,1),
+    Luty(28,2),
+    Marzec(31,3),
+    Kwiecień(30,4),
+    Maj(31,5),
+    Czerwiec(30,6),
+    Lipiec(31,7),
+    Sierpień(31,8),
+    Wrzesien(30,9),
+    Październik(31,10),
+    Listopad(30,11),
+    Grudzień(31,12);
 
     private int days;
     private int index;

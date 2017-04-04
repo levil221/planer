@@ -1,12 +1,19 @@
 package pl.levil.view;
 
+
+import com.vaadin.annotations.Theme;
+
 import com.vaadin.ui.*;
+import pl.levil.MyUI;
 import pl.levil.model.Months;
 import pl.levil.model.Reservation;
 import pl.levil.model.Room;
 
 import pl.levil.resources.ResourceManager;
+import pl.levil.util.NotificationManager;
+import pl.levil.util.Updateable;
 import pl.levil.view.components.calendar.CalendarFiled;
+import pl.levil.view.components.calendar.ReservationDetailsWindow;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,8 +28,8 @@ import java.util.concurrent.CompletableFuture;
 
 //TODO: dodac obsluge lat przestepnych
 
-
-public class CalendarComponent extends CustomComponent {
+@Theme("mytheme")
+public class CalendarComponent extends CustomComponent implements Updateable{
 
     //region fields
     private Calendar calendar = Calendar.getInstance();
@@ -35,26 +42,45 @@ public class CalendarComponent extends CustomComponent {
     private VerticalLayout panel;
     private HorizontalLayout controllLayout;
     private GridLayout calendarGrid = new GridLayout();
+    private Label monthInfo = new Label();
+    private Button addNewReservations = new Button();
     //endregion
 
     public CalendarComponent() {
+        NotificationManager.getInstance().subscribeToGuiUpdate(this);
+
         currentMonth = Months.values()[LocalDate.now().getMonth().getValue()-1];
         calendar.set(LocalDate.now().getYear(), currentMonth.getIndex(), 1);
 
         panel = new VerticalLayout();
         controllLayout = new HorizontalLayout();
+
+        addNewReservations = new Button();
+        addNewReservations.setCaption("dodaj spotkanie");
+        addNewReservations.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                ReservationDetailsWindow window = new ReservationDetailsWindow();
+                MyUI.getCurrent().getUI().addWindow(window);
+            }
+        });
+        controllLayout.addComponent(addNewReservations);
         panel.addComponent(controllLayout);
+
+        monthInfo.setPrimaryStyleName("label-month-name");
+        panel.addComponent(monthInfo);
+
         panel.addComponent(calendarGrid);
         makeCalendarGrid(currentMonth);
+
         setCompositionRoot(panel);
 
     }
 
     private void makeCalendarGrid(Months month) {
-        GridLayout newCalendarGrid = new GridLayout(7, 6);
-        newCalendarGrid.setWidth("330px");
-        newCalendarGrid.setHeight("530px");
+        monthInfo.setValue(month.name());
 
+        GridLayout newCalendarGrid = new GridLayout(7, 6);
         toFill = new ArrayList<>();
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK) - 1;
         int row = 0;
@@ -84,16 +110,16 @@ public class CalendarComponent extends CustomComponent {
     public void changeMonth(String month) {
         if (month == "next") {
             if (currentMonth.getIndex() == 12) {
-                currentMonth = Months.styczeń;
-                calendar.set(calendar.get(Calendar.YEAR) - 1900 + 1, currentMonth.getIndex(), 1);
+                currentMonth = Months.Styczeń;
+                calendar.set(calendar.get(Calendar.YEAR) + 1, currentMonth.getIndex(), 1);
             } else
                 currentMonth = Months.values()[currentMonth.getIndex() + 1];
 
             makeCalendarGrid(currentMonth);
         } else {
             if (currentMonth.getIndex() == 1) {
-                currentMonth = Months.grudzień;
-                calendar.set(calendar.get(Calendar.YEAR - 1900 + 1), currentMonth.getIndex(), 1);
+                currentMonth = Months.Grudzień;
+                calendar.set(calendar.get(Calendar.YEAR + 1), currentMonth.getIndex(), 1);
             } else
                 currentMonth = Months.values()[currentMonth.getIndex() - 1];
 
@@ -114,4 +140,9 @@ public class CalendarComponent extends CustomComponent {
         UI.getCurrent().push();
     }
 
+    @Override
+    public void changesWereMade() {
+        makeCalendarGrid(currentMonth);
+        UI.getCurrent().push();
+    }
 }
